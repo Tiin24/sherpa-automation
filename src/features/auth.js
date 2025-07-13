@@ -40,11 +40,6 @@ async function login(page) {
     
   } catch (error) {
     console.error('❌ Hechizo de login fallido:', error.message);
-    
-    // Captura de pantalla para diagnóstico
-    await page.screenshot({ path: 'error-login.png' });
-    console.log('📸 Captura guardada en error-login.png');
-    
     return false;
   }
 }

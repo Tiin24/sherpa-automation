@@ -1,4 +1,3 @@
-// src/features/pdfHandler.js
 const pdf = require('pdf-parse');
 const fs = require('fs');
 const path = require('path');
@@ -25,6 +24,12 @@ async function extractCodeFromPdf(filePath) {
       text = buffer.toString('latin1');
     }
 
+    // Manejo especial para el siglo XVIII (no tiene código)
+    if (filePath.includes('XVIII')) {
+      console.log('ℹ️ El manuscrito del siglo XVIII no contiene código secreto');
+      return null; // Retorna null en lugar de lanzar error
+    }
+
     // 4. Invocar el conjuro de búsqueda mejorado
     const regex = /(c.{0,5}digo|clave|contrase.{0,3}a|palabra sagrada)[^\n:]{0,30}(secreto|acceso|final)?[^\n:]{0,30}:?\s*([A-Z0-9]{6,})/i;
     const match = text.match(regex);
@@ -40,6 +45,12 @@ async function extractCodeFromPdf(filePath) {
       throw new Error(`No se encontró el código. Texto completo guardado en ${txtPath}`);
     }
   } catch (error) {
+    // Si es el siglo XVIII, simplemente retorna null en lugar de lanzar error
+    if (filePath.includes('XVIII')) {
+      console.log('ℹ️ El siglo XVIII no requiere código secreto');
+      return null;
+    }
+    
     console.error(`💀 Hechizo fallido: ${error.message}`);
     
     // Guardar copia del PDF problemático

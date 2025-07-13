@@ -6,8 +6,11 @@ module.exports = {
     username: 'monje@sherpa.local',
     password: 'cript@123'
   },
-  TIMEOUT: 30000, // 30 segundos
-  HEADLESS: false,
-  SLOW_MO: 100,
-  DOWNLOAD_DIR: './downloads'
+  TIMEOUT: 60000,       // 60 segundos para operaciones normales
+  LONG_TIMEOUT: 120000, // 120 segundos para operaciones críticas
+  HEADLESS: false,      // Cambiar a true en producción
+  SLOW_MO: 200,         // Pausas entre acciones (ms)
+  DOWNLOAD_DIR: './downloads',
+  SPECIAL_API_TIMEOUT: 30000, // 30 segundos para APIs
+  API_CONFIG: {} // esto lo vamos a llenar dinámicamente
 };

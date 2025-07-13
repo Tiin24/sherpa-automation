@@ -1,4 +1,3 @@
-// src/features/unlocker.js
 const config = require('../core/config');
 
 async function unlockNextCentury(page, currentCentury, code) {
@@ -6,35 +5,42 @@ async function unlockNextCentury(page, currentCentury, code) {
   console.log(`🔓 Preparando para desbloquear el siglo ${nextCentury}...`);
 
   try {
-    // 1. Esperar a que la página esté estable
     await page.waitForLoadState('networkidle');
-    
-    // 2. Localizar el bloque del siglo objetivo
+
     const centuryBlockXPath = getCenturyBlockXPath(nextCentury);
     await scrollToCentury(page, centuryBlockXPath);
-    
-    // 3. Llenar el código
+
     const inputXPath = `${centuryBlockXPath}//input[@type='text']`;
     await page.fill(`xpath=${inputXPath}`, code);
     console.log(`🔑 Código ${code} insertado para el siglo ${nextCentury}`);
-    
-    // 4. Click en desbloquear
+
     const buttonXPath = `${centuryBlockXPath}//button[contains(., 'Desbloquear') and not(@disabled)]`;
     await page.click(`xpath=${buttonXPath}`);
-    
-    // 5. Verificar desbloqueo
+
+    if (['XVII', 'XVIII'].includes(nextCentury)) {
+      await page.waitForSelector('div[role="dialog"][aria-modal="true"]', {
+        state: 'visible',
+        timeout: config.TIMEOUT
+      });
+
+      const closeModalButton = await page.$('button[aria-label="Cerrar modal"]');
+      if (closeModalButton) {
+        await closeModalButton.click();
+        console.log('🚪 Modal cerrado');
+      } else {
+        console.log('⚠️ No se encontró el botón para cerrar el modal');
+      }
+    }
+
     await verifyUnlock(page, centuryBlockXPath);
-    
     console.log(`✅ ¡Siglo ${nextCentury} desbloqueado con éxito!`);
     return true;
   } catch (error) {
     console.error(`❌ Error al desbloquear siglo ${nextCentury}:`, error.message);
-    await takeDebugScreenshots(page, nextCentury);
     throw error;
   }
 }
 
-// Funciones auxiliares
 function getNextCentury(current) {
   const centuryOrder = ['XIV', 'XV', 'XVI', 'XVII', 'XVIII'];
   const currentIndex = centuryOrder.indexOf(current);
@@ -60,12 +66,6 @@ async function verifyUnlock(page, centuryBlockXPath) {
     state: 'visible',
     timeout: config.TIMEOUT
   });
-}
-
-async function takeDebugScreenshots(page, century) {
-  await page.screenshot({ path: `error-unlock-${century}.png` });
-  await page.screenshot({ path: `error-unlock-${century}-full.png`, fullPage: true });
-  console.log('📸 Capturas de diagnóstico guardadas');
 }
 
 module.exports = { unlockNextCentury };

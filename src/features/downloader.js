@@ -5,11 +5,7 @@ const config = require('../core/config');
 async function downloadManuscript(page, century = 'XIV') {
   try {
     console.log(`📜 Buscando manuscrito del siglo ${century}...`);
-    
-    // Tomar screenshot para diagnóstico inicial
-    await page.screenshot({ path: 'before-download.png' });
-    console.log('📸 Captura inicial guardada (before-download.png)');
-
+  
     // Selector mejorado para el botón que contiene el span
     const downloadButton = await page.waitForSelector(
       'button:has(span:has-text("Descargar PDF"))',
@@ -46,11 +42,6 @@ async function downloadManuscript(page, century = 'XIV') {
 
   } catch (error) {
     console.error(`❌ Error al descargar manuscrito ${century}:`, error.message);
-    
-    // Tomar captura de error
-    await page.screenshot({ path: `error-download-${century}.png` });
-    console.log(`📸 Captura de error guardada: error-download-${century}.png`);
-    
     throw error;
   }
 }
