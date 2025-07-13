@@ -85,38 +85,35 @@ graph TD
     A[Inicio] --> B{{auth.js}}
     
     subgraph "Secuencia Principal"
-        B --> C[processCentury XIV]
-        C --> D[downloadManuscript]
-        D --> E[extractCode]
-        E --> F[unlockNextCentury XV]
-        F --> G[processCentury XV...]
-        G --> H[goToNextPage]
+        B --> C["processCentury('XIV')"]
+        C --> D["downloadManuscript()"]
+        D --> E["extractCode()"]
+        E --> F["unlockNextCentury('XV')"]
+        F --> G["processCentury('XV')"]
+        G --> H["goToNextPage()"]
     end
 
     subgraph "Challenge API"
-        H --> I[clickDocumentationButton]
-        I --> J[extraerDatosDeModal]
-        J --> K[getBookNameForCentury]
-        K --> L[obtenerDesafioDesdeAPI]
-        L --> M[solveBinarySearchChallenge]
+        H --> I["clickDocumentationButton()"]
+        I --> J["extraerDatosDeModal()"]
+        J --> K["getBookNameForCentury()"]
+        K --> L["obtenerDesafioDesdeAPI()"]
+        L --> M["solveBinarySearchChallenge()"]
     end
 
     subgraph "Módulos"
-        C & G -.-> N[main.js]
-        D -.-> O[downloader.js]
-        E -.-> P[pdfHandler.js]
-        F -.-> Q[unlocker.js]
-        I & J & K -.-> R[challengeSolver.js]
-        L -.-> S[apiHandler.js]
-        M -.-> T[apiSolver.js]
+        C & G -.-> N[[main.js]]
+        D -.-> O[[downloader.js]]
+        E -.-> P[[pdfHandler.js]]
+        F -.-> Q[[unlocker.js]]
+        I & J & K -.-> R[[challengeSolver.js]]
+        L -.-> S[[apiHandler.js]]
+        M -.-> T[[apiSolver.js]]
     end
 
     style A fill:#2ecc71,stroke:#333
-    style subgraph "Secuencia Principal" fill:#f9f9f9,stroke:#2980b9
-    style subgraph "Challenge API" fill:#e8f4f8,stroke:#16a085
-    style subgraph "Módulos" fill:#f5f5f5,stroke:#7f8c8d
+    style B fill:#3498db,stroke:#333
 ```
-
 
 ## 📄 Licencia
 
